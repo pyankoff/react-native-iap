@@ -119,11 +119,15 @@ public class RNIapModule extends ReactContextBaseJavaModule {
     BillingClientStateListener billingClientStateListener = new BillingClientStateListener() {
       @Override
       public void onBillingSetupFinished(@BillingClient.BillingResponse int responseCode) {
-        if (responseCode == BillingClient.BillingResponse.OK) {
-          Log.d(TAG, "billing client ready");
-          callback.run();
-        } else {
-          rejectPromiseWithBillingError(promise, responseCode);
+        try {
+          if (responseCode == BillingClient.BillingResponse.OK) {
+              Log.d(TAG, "billing client ready");
+              callback.run();
+          } else {
+              rejectPromiseWithBillingError(promise, responseCode);
+          }
+        } catch (Exception e) {
+          // fix crashes
         }
       }
 
